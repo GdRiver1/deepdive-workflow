@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "planName": "Team Jellie Base Plan",
+    "createdAt": "2026-03-27T00:00:00.000Z",
+    "notes": "Build the base. Protect the options."
+  },
+  "household": {
+    "jasonAge": 59,
+    "kellieAge": 58,
+    "retirementAge": 65,
+    "maxAge": 95,
+    "socialSecurityInflation": true,
+    "socialSecurityCOLA": 2.2
+  },
+  "socialSecurity": {
+    "jasonClaimAge": 65,
+    "kellieClaimAge": 65,
+    "jasonBenefits": { "62": 2096, "65": 2700, "67": 3043 },
+    "kellieBenefits": { "62": 1513, "65": 1900, "67": 2152 }
+  },
+  "spending": {
+    "baseMonthly": 9200,
+    "inflation": 2.8,
+    "phases": [
+      { "name": "Go-Go Years", "startAge": 62, "endAge": 75, "multiplier": 1.08 },
+      { "name": "Steady Years", "startAge": 76, "endAge": 85, "multiplier": 1.0 },
+      { "name": "Slow-Go Years", "startAge": 86, "endAge": 95, "multiplier": 0.9 }
+    ]
+  },
+  "accounts": {
+    "cash": { "balance": 120000, "annualGrowth": 2.0, "countableIncome": false, "taxSensitive": false },
+    "taxable": { "balance": 185000, "annualGrowth": 4.0, "countableIncome": true, "taxSensitive": true },
+    "roth": { "balance": 310000, "annualGrowth": 5.5, "countableIncome": false, "taxSensitive": false },
+    "hsa": { "balance": 62000, "annualGrowth": 4.5, "countableIncome": false, "taxSensitive": false },
+    "traditional": { "balance": 740000, "annualGrowth": 5.0, "countableIncome": true, "taxSensitive": true }
+  },
+  "housing": {
+    "strategy": "compare",
+    "mortgagePayment": 2150,
+    "helocPayment": 650,
+    "taxes": 560,
+    "insurance": 240,
+    "maintenance": 380,
+    "improvementBudgetMonthly": 500,
+    "mergedLoanPayment": 2550,
+    "mergedLoanTermNote": "Targeting 20-year fixed after major improvements",
+    "enableReverseMortgage": false,
+    "reverseMortgageMonthly": 0
+  },
+  "warningLines": {
+    "snapGrossMonthly": 4200,
+    "medicalMonthly": 3000,
+    "customCountableMonthly": 5200,
+    "taxAnnual": 95000
+  },
+  "withdrawalOrder": ["cash", "roth", "hsa", "traditional", "housingRestructure", "reverseMortgage"],
+  "scenarioLab": {
+    "saved": []
+  }
+}

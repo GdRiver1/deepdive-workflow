@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Team Jellie Command Center (Single File)</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+body{font-family:Inter,Arial,sans-serif;background:#0b1220;color:#e8f0ff;margin:0;padding:16px}h1{margin:0 0 4px}.grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}.card{background:#121c31;border:1px solid #2a3c63;padding:12px;border-radius:10px}input,button{width:100%;padding:8px;border-radius:8px;border:1px solid #2a3c63;background:#0e1a33;color:#fff}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{border:1px solid #2a3c63;padding:6px;text-align:left}.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+</style>
+</head>
+<body>
+<h1>Team Jellie Retirement & Benefits Command Center</h1>
+<p>Build the base. Protect the options.</p>
+<div class="row">
+<label>Jason claim age<input id="jage" type="number" value="65"></label>
+<label>Kellie claim age<input id="kage" type="number" value="65"></label>
+<label>Monthly spending<input id="spend" type="number" value="9200"></label>
+<label>Retirement balance<input id="bal" type="number" value="1417000"></label>
+<button id="runBtn">Recalculate</button>
+</div>
+<div id="cards" class="grid" style="margin-top:12px"></div>
+<canvas id="c" style="max-height:260px;margin-top:14px"></canvas>
+<table><thead><tr><th>Month</th><th>SS</th><th>Spend</th><th>Gap</th><th>Balance</th></tr></thead><tbody id="tb"></tbody></table>
+<script>
+const ss={j:{62:2096,65:2700,67:3043},k:{62:1513,65:1900,67:2152}};
+function pick(m,a){if(m[a])return m[a];const x=Object.keys(m).map(Number).sort((a,b)=>a-b);if(a<=x[0])return m[x[0]];if(a>=x[x.length-1])return m[x[x.length-1]];for(let i=0;i<x.length-1;i++){if(a>=x[i]&&a<=x[i+1]){const t=(a-x[i])/(x[i+1]-x[i]);return m[x[i]]+(m[x[i+1]]-m[x[i]])*t}}return 0}
+let chart;
+function recalc(){const j=+jage.value,k=+kage.value,sp=+spend.value;let bal=+bal.value;const ssm=pick(ss.j,j)+pick(ss.k,k);const rows=[];for(let m=1;m<=240;m++){bal*=1+0.045/12;const inf=Math.pow(1+0.028,m/12);const s=sp*inf;const gap=Math.max(0,s-ssm);bal-=gap;rows.push({m,ss:ssm,s,g:gap,b:bal})}
+cards.innerHTML=`<div class='card'><b>Plan status</b><div>${rows.find(r=>r.b<=0)?'Warning':'Stable'}</div></div><div class='card'><b>Monthly SS</b><div>$${Math.round(ssm)}</div></div><div class='card'><b>Gap after SS</b><div>$${Math.round(rows[0].g)}</div></div><div class='card'><b>Longevity</b><div>${rows.find(r=>r.b<=0)?.m||'>240'} months</div></div>`;
+tb.innerHTML=rows.slice(0,60).map(r=>`<tr><td>${r.m}</td><td>$${Math.round(r.ss)}</td><td>$${Math.round(r.s)}</td><td>$${Math.round(r.g)}</td><td>$${Math.round(r.b)}</td></tr>`).join('');
+if(chart)chart.destroy();chart=new Chart(c,{type:'line',data:{labels:rows.map(r=>r.m),datasets:[{label:'Balance',data:rows.map(r=>r.b),borderColor:'#5bc0ff',pointRadius:0}]},options:{plugins:{legend:{labels:{color:'#fff'}}},scales:{x:{ticks:{color:'#9db0d3'}},y:{ticks:{color:'#9db0d3'}}}}});
+}
+runBtn.onclick=recalc;recalc();
+</script>
+</body></html>
