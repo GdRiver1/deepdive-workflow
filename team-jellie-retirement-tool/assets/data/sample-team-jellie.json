@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "planName": "Team Jellie Base Plan",
+    "createdAt": "2026-03-27T00:00:00.000Z",
+    "notes": "Build the base. Protect the options."
+  },
+  "household": {
+    "jasonAge": 59,
+    "kellieAge": 58,
+    "retirementAge": 65,
+    "maxAge": 95,
+    "socialSecurityInflation": true,
+    "socialSecurityCOLA": 2.2
+  },
+  "socialSecurity": {
+    "jasonClaimAge": 65,
+    "kellieClaimAge": 65,
+    "jasonBenefits": { "62": 2096, "65": 2700, "67": 3043 },
+    "kellieBenefits": { "62": 1513, "65": 1900, "67": 2152 }
+  },
+  "spending": {
+    "baseMonthly": 9200,
+    "inflation": 2.8,
+    "phases": [
+      { "name": "Go-Go Years", "startAge": 62, "endAge": 75, "multiplier": 1.08 },
+      { "name": "Steady Years", "startAge": 76, "endAge": 85, "multiplier": 1.0 },
+      { "name": "Slow-Go Years", "startAge": 86, "endAge": 95, "multiplier": 0.9 }
+    ]
+  },
+  "accounts": {
+    "cash": { "balance": 120000, "annualGrowth": 2.0, "countableIncome": false, "taxSensitive": false },
+    "taxable": { "balance": 185000, "annualGrowth": 4.0, "countableIncome": true, "taxSensitive": true },
+    "roth": { "balance": 310000, "annualGrowth": 5.5, "countableIncome": false, "taxSensitive": false },
+    "hsa": { "balance": 62000, "annualGrowth": 4.5, "countableIncome": false, "taxSensitive": false },
+    "traditional": { "balance": 740000, "annualGrowth": 5.0, "countableIncome": true, "taxSensitive": true }
+  },
+  "housing": {
+    "strategy": "compare",
+    "mortgagePayment": 2150,
+    "helocPayment": 650,
+    "taxes": 560,
+    "insurance": 240,
+    "maintenance": 380,
+    "improvementBudgetMonthly": 500,
+    "mergedLoanPayment": 2550,
+    "mergedLoanTermNote": "Targeting 20-year fixed after major improvements",
+    "enableReverseMortgage": false,
+    "reverseMortgageMonthly": 0
+  },
+  "warningLines": {
+    "snapGrossMonthly": 4200,
+    "medicalMonthly": 3000,
+    "customCountableMonthly": 5200,
+    "taxAnnual": 95000
+  },
+  "taxModel": {
+    "enabled": true,
+    "standardDeduction": 32000,
+    "brackets": [
+      { "upTo": 23200, "rate": 10 },
+      { "upTo": 94300, "rate": 12 },
+      { "upTo": 201050, "rate": 22 },
+      { "upTo": 383900, "rate": 24 },
+      { "upTo": null, "rate": 32 }
+    ]
+  },
+  "irmaa": {
+    "enabled": true,
+    "thresholds": [
+      { "incomeOver": 212000, "monthlySurcharge": 74 },
+      { "incomeOver": 266000, "monthlySurcharge": 185 },
+      { "incomeOver": 334000, "monthlySurcharge": 295 },
+      { "incomeOver": 400000, "monthlySurcharge": 406 }
+    ]
+  },
+  "rmd": {
+    "enabled": true,
+    "startAge": 73,
+    "divisors": { "73": 26.5, "74": 25.5, "75": 24.6, "76": 23.7, "77": 22.9, "78": 22.0, "79": 21.1, "80": 20.2, "81": 19.4, "82": 18.5, "83": 17.7, "84": 16.8, "85": 16.0, "86": 15.2, "87": 14.4, "88": 13.7, "89": 12.9, "90": 12.2, "91": 11.5, "92": 10.8, "93": 10.1, "94": 9.5, "95": 8.9 }
+  },
+  "monteCarlo": {
+    "expectedReturn": 5.2,
+    "volatility": 11,
+    "years": 30,
+    "iterations": 500
+  },
+  "withdrawalOrder": ["cash", "roth", "hsa", "traditional", "housingRestructure", "reverseMortgage"],
+  "scenarioLab": {
+    "saved": []
+  }
+}

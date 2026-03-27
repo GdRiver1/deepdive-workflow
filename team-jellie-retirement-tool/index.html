@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Team Jellie Retirement & Benefits Command Center" />
+  <title>Team Jellie Retirement & Benefits Command Center</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.3.136/build/pdf.min.mjs" type="module"></script>
+  <script type="module">
+    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.3.136/build/pdf.min.mjs';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.3.136/build/pdf.worker.min.mjs';
+    window.pdfjsLib = pdfjsLib;
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+  <script src="./assets/js/calculations.js" defer></script>
+  <script src="./assets/js/storage.js" defer></script>
+  <script src="./assets/js/importers.js" defer></script>
+  <script src="./assets/js/app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <span class="brand-badge">Team Jellie</span>
+    <h1>Retirement & Benefits Command Center</h1>
+    <p class="subtitle">Retirement, Cash Flow, Benefits, and Forever-Home Planning</p>
+    <p class="motto">Build the base. Protect the options.</p>
+    <div id="stickyBar" class="sticky-bar">Calculating...</div>
+  </header>
+
+  <main class="layout">
+    <section id="summaryCards" class="summary-grid" aria-label="Dashboard summary cards"></section>
+
+    <nav class="tabs" aria-label="Primary sections">
+      <button class="tab-btn active" data-tab="tab-model">Model Inputs</button>
+      <button class="tab-btn" data-tab="tab-tax">Tax / IRMAA / RMD</button>
+      <button class="tab-btn" data-tab="tab-warnings">Benefits & Warning Lines</button>
+      <button class="tab-btn" data-tab="tab-housing">Forever Home Strategy</button>
+      <button class="tab-btn" data-tab="tab-scenarios">Scenario Lab</button>
+      <button class="tab-btn" data-tab="tab-reports">Reporting Views</button>
+      <button class="tab-btn" data-tab="tab-import">Import / Export & Ingest</button>
+    </nav>
+
+    <section id="tab-model" class="tab-panel active">
+      <h2>Household Timeline & Core Inputs</h2>
+      <div class="field-grid">
+        <label>Jason current age <input class="model-input" id="jasonAge" type="number" min="40" max="90"></label>
+        <label>Kellie current age <input class="model-input" id="kellieAge" type="number" min="40" max="90"></label>
+        <label>Retirement age (both) <input class="model-input" id="retirementAge" type="number" min="50" max="75"></label>
+        <label>Projection end age <input class="model-input" id="maxAge" type="number" min="80" max="110"></label>
+        <label>Jason claim age <input class="model-input" id="jasonClaimAge" type="number" min="62" max="70"></label>
+        <label>Kellie claim age <input class="model-input" id="kellieClaimAge" type="number" min="62" max="70"></label>
+        <label>Social Security COLA % <input class="model-input" id="ssCola" type="number" min="0" max="10" step="0.1"></label>
+        <label><input class="model-input" id="ssInflation" type="checkbox"> Adjust Social Security with inflation</label>
+        <label>Base monthly spending target <input class="model-input" id="baseMonthly" type="number"></label>
+        <label>Spending inflation % <input class="model-input" id="spendInflation" type="number" step="0.1"></label>
+        <label>Cash balance <input class="model-input" id="cashBalance" type="number"></label>
+        <label>Taxable balance <input class="model-input" id="taxableBalance" type="number"></label>
+        <label>Roth balance <input class="model-input" id="rothBalance" type="number"></label>
+        <label>HSA balance <input class="model-input" id="hsaBalance" type="number"></label>
+        <label>Traditional balance <input class="model-input" id="traditionalBalance" type="number"></label>
+      </div>
+      <h3>Withdrawal order</h3>
+      <label>Order list (comma separated)
+        <input id="withdrawalOrder" type="text" value="cash, roth, hsa, traditional, housingRestructure, reverseMortgage" />
+      </label>
+    </section>
+
+    <section id="tab-tax" class="tab-panel">
+      <h2>Configurable Tax Layers</h2>
+      <div class="field-grid">
+        <label><input class="model-input" id="taxEnabled" type="checkbox"> Enable federal bracket estimate</label>
+        <label>Standard deduction <input class="model-input" id="stdDeduction" type="number"></label>
+        <label>Bracket 1 up-to <input class="model-input" id="b1UpTo" type="number"></label>
+        <label>Bracket 1 rate % <input class="model-input" id="b1Rate" type="number" step="0.1"></label>
+        <label>Bracket 2 up-to <input class="model-input" id="b2UpTo" type="number"></label>
+        <label>Bracket 2 rate % <input class="model-input" id="b2Rate" type="number" step="0.1"></label>
+        <label>Bracket 3 up-to <input class="model-input" id="b3UpTo" type="number"></label>
+        <label>Bracket 3 rate % <input class="model-input" id="b3Rate" type="number" step="0.1"></label>
+        <label><input class="model-input" id="irmaaEnabled" type="checkbox"> Enable IRMAA-style surcharge alerts</label>
+        <label>IRMAA tier 1 threshold <input class="model-input" id="irmaa1Income" type="number"></label>
+        <label>IRMAA tier 1 monthly surcharge <input class="model-input" id="irmaa1Monthly" type="number"></label>
+        <label><input class="model-input" id="rmdEnabled" type="checkbox"> Enable RMD logic</label>
+        <label>RMD start age <input class="model-input" id="rmdStartAge" type="number" min="70" max="80"></label>
+      </div>
+      <h3>Retirement-age wizard (62 / 65 / 67)</h3>
+      <p class="muted">Guided side-by-side scoring for claim strategies. Social Security always starts at retirement day one in these scenarios.</p>
+      <div id="wizardCompare"></div>
+    </section>
+
+    <section id="tab-warnings" class="tab-panel">
+      <h2>Benefits / Warning Lines</h2>
+      <div class="warning-box">Planning alerts only — these are not legal or eligibility determinations.</div>
+      <div class="field-grid">
+        <label>SNAP-style gross monthly line <input class="model-input" id="snapLine" type="number"></label>
+        <label>Medical/Medicaid monthly line <input class="model-input" id="medicalLine" type="number"></label>
+        <label>Custom countable-income line <input class="model-input" id="customLine" type="number"></label>
+        <label>Annual tax warning line <input class="model-input" id="taxLine" type="number"></label>
+      </div>
+      <ul id="warningsPanel"></ul>
+    </section>
+
+    <section id="tab-housing" class="tab-panel">
+      <h2>Forever-Home Housing Strategy (No Downsizing Assumed)</h2>
+      <div class="field-grid">
+        <label>Scenario mode
+          <select class="model-input" id="housingStrategy">
+            <option value="keep">Keep separate mortgage + HELOC</option>
+            <option value="combine">Combine later into one loan</option>
+            <option value="compare">Compare both (choose lower monthly burden)</option>
+          </select>
+        </label>
+        <label>Mortgage payment <input class="model-input" id="mortgagePayment" type="number"></label>
+        <label>HELOC payment <input class="model-input" id="helocPayment" type="number"></label>
+        <label>Property taxes <input class="model-input" id="housingTaxes" type="number"></label>
+        <label>Insurance <input class="model-input" id="housingInsurance" type="number"></label>
+        <label>Maintenance reserve <input class="model-input" id="housingMaint" type="number"></label>
+        <label>Home improvements monthly tracking <input class="model-input" id="housingImprove" type="number"></label>
+        <label>Merged loan target payment <input class="model-input" id="mergedPayment" type="number"></label>
+      </div>
+      <div id="housingCompare" class="card"></div>
+    </section>
+
+    <section id="tab-scenarios" class="tab-panel">
+      <h2>Scenario Lab</h2>
+      <div class="actions"><button id="saveScenarioBtn">Save current scenario</button></div>
+      <div id="scenarioList"></div>
+      <h3>Scenario comparison (A/B/C)</h3>
+      <div id="scenarioCompareWrap"></div>
+    </section>
+
+    <section id="tab-reports" class="tab-panel">
+      <h2>Reporting Views</h2>
+      <div class="actions">
+        <button id="printSummaryBtn">Print summary report</button>
+        <button id="runMonteCarloBtn">Run Monte Carlo Stress Test</button>
+      </div>
+      <div class="field-grid">
+        <label>Monte Carlo years <input class="model-input" id="mcYears" type="number" min="10" max="50"></label>
+        <label>Iterations <input class="model-input" id="mcIterations" type="number" min="100" max="3000" step="100"></label>
+        <label>Expected annual return % <input class="model-input" id="mcReturn" type="number" step="0.1"></label>
+        <label>Volatility % <input class="model-input" id="mcVolatility" type="number" step="0.1"></label>
+      </div>
+      <p id="mcSummary" class="muted">Monte Carlo has not been run yet.</p>
+      <div class="chart-card"><canvas id="monteCarloChart"></canvas></div>
+
+      <h3>Monthly projection table</h3>
+      <div class="table-wrap"><table id="monthlyTable" class="data-table"><thead><tr><th>Date</th><th>SS</th><th>Spend</th><th>Gap</th><th>Countable</th><th>Fed Tax</th><th>IRMAA</th><th>Unmet</th></tr></thead><tbody></tbody></table></div>
+      <h3>Annual rollup table</h3>
+      <div class="table-wrap"><table id="annualTable" class="data-table"><thead><tr><th>Year</th><th>SS</th><th>Spend</th><th>Countable</th><th>Tax-sensitive</th><th>Federal Tax</th><th>IRMAA</th><th>RMD</th><th>Unmet</th></tr></thead><tbody></tbody></table></div>
+      <h3>Withdrawal-source table</h3>
+      <div class="table-wrap"><table id="withdrawalTable" class="data-table"><thead><tr><th>Year</th><th>Cash</th><th>Roth</th><th>HSA</th><th>Traditional</th><th>Housing</th><th>Reverse</th></tr></thead><tbody></tbody></table></div>
+      <div class="charts-grid">
+        <div class="chart-card"><canvas id="balanceChart"></canvas></div>
+        <div class="chart-card"><canvas id="incomeChart"></canvas></div>
+        <div class="chart-card"><canvas id="warningChart"></canvas></div>
+        <div class="chart-card"><canvas id="housingChart"></canvas></div>
+      </div>
+    </section>
+
+    <section id="tab-import" class="tab-panel">
+      <h2>Import / Export / Statement Ingest</h2>
+      <div class="actions">
+        <button id="exportJsonBtn">Export current JSON snapshot</button>
+        <label class="button-like">Import scenario JSON <input id="importJsonInput" type="file" accept="application/json" hidden></label>
+        <button id="resetSampleBtn">Reset to Team Jellie sample data</button>
+      </div>
+      <h3>Document upload & statement ingest</h3>
+      <input id="statementInput" type="file" accept="application/pdf,image/*" />
+      <p id="ingestStatus" class="muted">No file uploaded yet.</p>
+      <div id="ingestPreview"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+</body>
+</html>
