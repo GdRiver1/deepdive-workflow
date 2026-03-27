@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jason & Kellie Retirement + Benefits Sandbox</title>
+  <style>
+    :root{--line:#334155;--text:#e5e7eb;--muted:#94a3b8;--bg:#0b1020;--panel:#111827;--accent:#38bdf8;--good:#22c55e;--warn:#f59e0b;--bad:#ef4444}
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,#0b1020,#111827);color:var(--text)}
+    .wrap{max-width:1480px;margin:0 auto;padding:16px}.grid{display:grid;grid-template-columns:420px 1fr;gap:16px;align-items:start}
+    .card{background:#111827;border:1px solid var(--line);border-radius:14px;padding:14px}.subgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .quad{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+    .metric{background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:10px}.metric .label{font-size:12px;color:var(--muted)}.metric .value{font-size:24px;font-weight:bold}
+    input,textarea{width:100%;padding:9px;border-radius:10px;border:1px solid #475569;background:#0b1220;color:var(--text)}
+    label{display:block;font-size:12px;color:#cbd5e1;margin:3px 0;font-weight:bold}.small{font-size:12px;color:var(--muted)}
+    .phase{border:1px solid var(--line);border-radius:12px;padding:10px;background:#0b1220;margin:8px 0}
+    button{width:100%;padding:10px;border:none;border-radius:10px;margin-top:8px;background:var(--accent);font-weight:bold;cursor:pointer}
+    button.secondary{background:#334155;color:#fff}.checkline{display:flex;align-items:center;gap:7px;border:1px solid #475569;background:#0b1220;border-radius:10px;padding:8px}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px} table{width:100%;min-width:1100px;border-collapse:collapse;background:#08101d}
+    th,td{padding:7px 9px;border-bottom:1px solid #243041;text-align:right;font-size:12px;white-space:nowrap} th:nth-child(-n+3),td:nth-child(-n+3){text-align:left}
+    thead th{position:sticky;top:0;background:#111827}.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+    canvas{width:100%;height:320px;background:#08101d;border:1px solid var(--line);border-radius:12px}
+    .suggestions{max-height:180px;overflow:auto;border:1px solid var(--line);padding:8px;border-radius:10px;background:#0b1220}
+    .srow{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px dashed #334155}
+    @media (max-width:1150px){.grid{grid-template-columns:1fr}.subgrid,.quad,.metric-row{grid-template-columns:1fr}}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/build/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <h1>Jason & Kellie Retirement + Benefits Sandbox</h1>
+  <p class="small">Now includes <b>document ingest</b>: upload a PDF statement or screenshot to prefill balances/income assumptions.</p>
+  <div class="grid">
+    <div class="card">
+      <h2>1) Household & Timeline</h2>
+      <div class="subgrid">
+        <div><label>Jason current age</label><input id="jasonAgeNow" type="number" step="0.1" value="52" /></div>
+        <div><label>Kellie current age</label><input id="kellieAgeNow" type="number" step="0.1" value="60" /></div>
+        <div><label>Plan until Jason age</label><input id="endAgeJason" type="number" step="0.1" value="88" /></div>
+        <div><label>Inflation rate %</label><input id="inflationRate" type="number" step="0.1" value="2.5" /></div>
+        <div><label>Roth annual growth %</label><input id="growthRoth" type="number" step="0.1" value="8" /></div>
+        <div><label>Traditional annual growth %</label><input id="growthTrad" type="number" step="0.1" value="8" /></div>
+        <div><label>Taxable/Cash annual growth %</label><input id="growthTaxable" type="number" step="0.1" value="4" /></div>
+        <div><label>HSA annual growth %</label><input id="growthHSA" type="number" step="0.1" value="5" /></div>
+      </div>
+
+      <h2>2) Starting Accounts</h2>
+      <div class="subgrid">
+        <div><label>Roth starting balance</label><input id="acctRoth" type="number" value="212961.17" /></div>
+        <div><label>Traditional starting balance</label><input id="acctTrad" type="number" value="359263.34" /></div>
+        <div><label>Taxable/Cash starting balance</label><input id="acctTaxable" type="number" value="198.06" /></div>
+        <div><label>HSA starting balance</label><input id="acctHSA" type="number" value="18512.39" /></div>
+      </div>
+
+      <h2>3) Core Spending / Benefits</h2>
+      <div class="subgrid">
+        <div><label>Mortgage + escrow / month</label><input id="mortgageMonthly" type="number" value="848.15" /></div>
+        <div><label>HELOC / month</label><input id="helocMonthly" type="number" value="0" /></div>
+        <div><label>Other living costs / month</label><input id="livingMonthly" type="number" value="2200" /></div>
+        <div><label>Travel/fun / month</label><input id="funMonthly" type="number" value="0" /></div>
+        <div><label>SNAP warning / month</label><input id="snapMonthlyLimit" type="number" value="2292" /></div>
+        <div><label>Medical warning / month</label><input id="medicalMonthlyLimit" type="number" value="3408" /></div>
+      </div>
+
+      <h2>4) Income Counting Rules</h2>
+      <div class="subgrid">
+        <div class="checkline"><input id="countStipend" type="checkbox" checked />Count stipend</div>
+        <div class="checkline"><input id="countSS" type="checkbox" checked />Count Social Security</div>
+        <div class="checkline"><input id="countTrad" type="checkbox" checked />Count traditional withdrawals</div>
+        <div class="checkline"><input id="countRoth" type="checkbox" />Count Roth withdrawals</div>
+        <div class="checkline"><input id="countTaxable" type="checkbox" />Count taxable withdrawals</div>
+        <div class="checkline"><input id="countHSA" type="checkbox" />Count HSA withdrawals</div>
+      </div>
+
+      <h2>5) Social Security Timing</h2>
+      <div class="subgrid">
+        <div><label>Jason SS starts at age</label><input id="jasonSSAge" type="number" value="67" /></div>
+        <div><label>Jason SS / month (today)</label><input id="jasonSSMonthly" type="number" value="2400" /></div>
+        <div><label>Kellie SS starts at age</label><input id="kellieSSAge" type="number" value="65" /></div>
+        <div><label>Kellie SS / month (today)</label><input id="kellieSSMonthly" type="number" value="1800" /></div>
+      </div>
+
+      <h2>6) Scenario Phases</h2>
+      <div class="phase"><h3>Phase 1 (52-58)</h3><div class="quad"><div><label>Stipend</label><input id="p1Stipend" type="number" value="500" /></div><div><label>Other income</label><input id="p1OtherIncome" type="number" value="0" /></div><div><label>Roth W/D</label><input id="p1Roth" type="number" value="0" /></div><div><label>Trad W/D</label><input id="p1Trad" type="number" value="0" /></div><div><label>Taxable W/D</label><input id="p1Taxable" type="number" value="0" /></div><div><label>HSA W/D</label><input id="p1HSA" type="number" value="0" /></div><div><label>Start age</label><input id="p1Start" type="number" value="52" /></div><div><label>End age</label><input id="p1End" type="number" value="58" /></div></div></div>
+      <div class="phase"><h3>Phase 2 (58-65)</h3><div class="quad"><div><label>Stipend</label><input id="p2Stipend" type="number" value="500" /></div><div><label>Other income</label><input id="p2OtherIncome" type="number" value="0" /></div><div><label>Roth W/D</label><input id="p2Roth" type="number" value="3500" /></div><div><label>Trad W/D</label><input id="p2Trad" type="number" value="0" /></div><div><label>Taxable W/D</label><input id="p2Taxable" type="number" value="0" /></div><div><label>HSA W/D</label><input id="p2HSA" type="number" value="100" /></div><div><label>Start age</label><input id="p2Start" type="number" value="58" /></div><div><label>End age</label><input id="p2End" type="number" value="65" /></div></div></div>
+      <div class="phase"><h3>Phase 3 (65-67)</h3><div class="quad"><div><label>Stipend</label><input id="p3Stipend" type="number" value="500" /></div><div><label>Other income</label><input id="p3OtherIncome" type="number" value="0" /></div><div><label>Roth W/D</label><input id="p3Roth" type="number" value="2000" /></div><div><label>Trad W/D</label><input id="p3Trad" type="number" value="0" /></div><div><label>Taxable W/D</label><input id="p3Taxable" type="number" value="0" /></div><div><label>HSA W/D</label><input id="p3HSA" type="number" value="100" /></div><div><label>Start age</label><input id="p3Start" type="number" value="65" /></div><div><label>End age</label><input id="p3End" type="number" value="67" /></div></div></div>
+      <div class="phase"><h3>Phase 4 (67-88)</h3><div class="quad"><div><label>Stipend</label><input id="p4Stipend" type="number" value="500" /></div><div><label>Other income</label><input id="p4OtherIncome" type="number" value="0" /></div><div><label>Roth W/D</label><input id="p4Roth" type="number" value="500" /></div><div><label>Trad W/D</label><input id="p4Trad" type="number" value="1000" /></div><div><label>Taxable W/D</label><input id="p4Taxable" type="number" value="0" /></div><div><label>HSA W/D</label><input id="p4HSA" type="number" value="0" /></div><div><label>Start age</label><input id="p4Start" type="number" value="67" /></div><div><label>End age</label><input id="p4End" type="number" value="88" /></div></div></div>
+
+      <h2>7) Upload Statement / Screenshot</h2>
+      <input id="docUpload" type="file" accept="application/pdf,image/*" />
+      <button onclick="extractFromDocument()" class="secondary">Extract values from document</button>
+      <div id="ingestStatus" class="small">No document processed yet.</div>
+      <div class="suggestions" id="suggestions"></div>
+      <label>Extracted raw text (editable)</label>
+      <textarea id="rawExtractedText" rows="6" placeholder="Raw OCR / PDF text will show here."></textarea>
+      <button onclick="applyDetectedValues()">Apply detected values</button>
+
+      <button onclick="runPlan()">Run projection</button>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>Results Snapshot</h2>
+        <div class="metric-row">
+          <div class="metric"><div class="label">Plan status</div><div class="value" id="mStatus">—</div></div>
+          <div class="metric"><div class="label">Ending total balance</div><div class="value" id="mEnding">—</div></div>
+          <div class="metric"><div class="label">Months over SNAP</div><div class="value" id="mSnap">—</div></div>
+          <div class="metric"><div class="label">Months over medical</div><div class="value" id="mMedical">—</div></div>
+          <div class="metric"><div class="label">Worst shortfall</div><div class="value" id="mShortfall">—</div></div>
+        </div>
+        <canvas id="chart" width="1000" height="320"></canvas>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>Monthly Projection</h2>
+        <div class="table-wrap"><table id="resultsTable"><thead><tr><th>Month</th><th>Jason Age</th><th>Kellie Age</th><th>Total Costs</th><th>Stipend</th><th>Other Income</th><th>Jason SS</th><th>Kellie SS</th><th>Roth W/D</th><th>Trad W/D</th><th>Taxable W/D</th><th>HSA W/D</th><th>Countable Income</th><th>Over SNAP?</th><th>Over Medical?</th><th>Shortfall</th><th>Total Bal</th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>Annual Rollup (new)</h2>
+        <div class="table-wrap"><table id="annualTable"><thead><tr><th>Year #</th><th>Jason Age (end)</th><th>Annual Costs</th><th>Annual Countable Income</th><th>Annual Withdrawals</th><th>Ending Total Balance</th><th>Max Monthly Shortfall</th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const detectedMap = new Map();
+function money(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n||0)}
+function money2(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n||0)}
+function num(id){return parseFloat(document.getElementById(id).value||0)}
+function checked(id){return document.getElementById(id).checked}
+function getPhase(age){const phases=[1,2,3,4].map(n=>({start:num('p'+n+'Start'),end:num('p'+n+'End'),stipend:num('p'+n+'Stipend'),other:num('p'+n+'OtherIncome'),roth:num('p'+n+'Roth'),trad:num('p'+n+'Trad'),taxable:num('p'+n+'Taxable'),hsa:num('p'+n+'HSA')}));for(const p of phases){if(age>=p.start&&age<p.end)return p}return phases[3]}
+
+async function extractFromDocument(){
+  const status=document.getElementById('ingestStatus');
+  const file=document.getElementById('docUpload').files?.[0];
+  if(!file){status.textContent='Please choose a PDF or image first.';return}
+  status.textContent='Extracting text... this can take up to ~60s for screenshots.';
+  let text='';
+  try{
+    if(file.type==='application/pdf') text=await extractPdfText(file);
+    else if(file.type.startsWith('image/')) text=await extractImageText(file);
+    else throw new Error('Unsupported file type');
+    document.getElementById('rawExtractedText').value=text.slice(0,20000);
+    detectValuesFromText(text);
+    status.textContent='Extraction complete. Review suggestions, then click Apply detected values.';
+  }catch(e){status.textContent='Extraction failed: '+e.message}
+}
+
+async function extractPdfText(file){
+  const arrayBuffer=await file.arrayBuffer();
+  const loadingTask=pdfjsLib.getDocument({data:arrayBuffer});
+  const pdf=await loadingTask.promise;
+  let full='';
+  for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const content=await page.getTextContent();
+    full+=content.items.map(i=>i.str).join(' ')+'\n';
+  }
+  return full;
+}
+
+async function extractImageText(file){
+  const {data:{text}}=await Tesseract.recognize(file,'eng',{logger:m=>{if(m.progress){document.getElementById('ingestStatus').textContent=`OCR ${Math.round(m.progress*100)}%`;}}});
+  return text;
+}
+
+function parseCurrencyLike(v){if(!v)return null;const cleaned=v.replace(/[$,\s]/g,'');const n=parseFloat(cleaned);return Number.isFinite(n)?n:null}
+function pick(text,re){const m=text.match(re);return m?parseCurrencyLike(m[1]):null}
+
+function detectValuesFromText(raw){
+  const text=raw.replace(/\u00A0/g,' ').replace(/\n+/g,'\n');
+  detectedMap.clear();
+  const rules=[
+    ['acctRoth',/roth(?:\s+ira|\s+account|\s+balance)?[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i],
+    ['acctTrad',/(traditional|401\(k\)|ira)[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i,2],
+    ['acctTaxable',/(taxable|brokerage|cash)[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i,2],
+    ['acctHSA',/(hsa|health\s+savings)[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i,2],
+    ['mortgageMonthly',/mortgage[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i],
+    ['helocMonthly',/heloc[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i],
+    ['jasonSSMonthly',/jason\s+ss[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i],
+    ['kellieSSMonthly',/kellie\s+ss[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i],
+    ['livingMonthly',/(monthly\s+living|living\s+costs?)[^\d$]{0,30}(\$?\s?[\d,]+(?:\.\d{1,2})?)/i,2]
+  ];
+  for(const r of rules){
+    const field=r[0], regex=r[1], group=r[2]||1;
+    const m=text.match(regex);
+    const val=m?parseCurrencyLike(m[group]):null;
+    if(val!==null) detectedMap.set(field,val);
+  }
+  renderSuggestions();
+}
+
+function renderSuggestions(){
+  const box=document.getElementById('suggestions');
+  if(!detectedMap.size){box.innerHTML='<div class="small">No obvious values detected. Paste cleaner text or tweak labels in your statement screenshot.</div>';return}
+  box.innerHTML=[...detectedMap.entries()].map(([field,val])=>`<div class="srow"><span>${field}</span><strong>${money2(val)}</strong></div>`).join('');
+}
+
+function applyDetectedValues(){
+  if(!detectedMap.size){document.getElementById('ingestStatus').textContent='Nothing to apply yet.';return}
+  for(const [field,val] of detectedMap.entries()){
+    const el=document.getElementById(field);
+    if(el) el.value=String(val.toFixed(2));
+  }
+  document.getElementById('ingestStatus').textContent=`Applied ${detectedMap.size} detected values. Re-run projection.`;
+  runPlan();
+}
+
+function runPlan(){
+  const jasonAgeNow=num('jasonAgeNow'),kellieAgeNow=num('kellieAgeNow'),endAgeJason=num('endAgeJason');
+  let roth=num('acctRoth'),trad=num('acctTrad'),taxable=num('acctTaxable'),hsa=num('acctHSA');
+  const gR=num('growthRoth')/1200,gT=num('growthTrad')/1200,gX=num('growthTaxable')/1200,gH=num('growthHSA')/1200,inf=num('inflationRate')/1200;
+  const baseCosts=num('mortgageMonthly')+num('helocMonthly')+num('livingMonthly')+num('funMonthly');
+  const snapLimit=num('snapMonthlyLimit'),medLimit=num('medicalMonthlyLimit');
+  const months=Math.round((endAgeJason-jasonAgeNow)*12); let snapOver=0,medOver=0,worstShortfall=0;
+  const rows=[],pts={labels:[],totalBal:[],countable:[],snap:[],medical:[]};
+
+  for(let m=0;m<=months;m++){
+    const ageJ=jasonAgeNow+m/12, ageK=kellieAgeNow+m/12, phase=getPhase(ageJ), f=Math.pow(1+inf,m);
+    const costs=baseCosts*f, stipend=phase.stipend*f, other=phase.other*f;
+    const jSS=ageJ>=num('jasonSSAge')?num('jasonSSMonthly')*Math.pow(1+inf,Math.max(0,(num('jasonSSAge')-jasonAgeNow)*12)):0;
+    const kSS=ageK>=num('kellieSSAge')?num('kellieSSMonthly')*Math.pow(1+inf,Math.max(0,(num('kellieSSAge')-kellieAgeNow)*12)):0;
+    roth*=1+gR; trad*=1+gT; taxable*=1+gX; hsa*=1+gH;
+    let rothWD=Math.min(roth,phase.roth*f),tradWD=Math.min(trad,phase.trad*f),taxWD=Math.min(taxable,phase.taxable*f),hsaWD=Math.min(hsa,phase.hsa*f);
+    let inflows=stipend+other+jSS+kSS+rothWD+tradWD+taxWD+hsaWD; let shortfall=Math.max(0,costs-inflows);
+    if(shortfall>0){for(const key of ['taxable','roth','hsa','trad']){let bal={taxable,roth,hsa,trad}[key], wd={taxable:taxWD,roth:rothWD,hsa:hsaWD,trad:tradWD}[key];let pull=Math.min(bal-wd,shortfall);if(pull>0){if(key==='taxable')taxWD+=pull;if(key==='roth')rothWD+=pull;if(key==='hsa')hsaWD+=pull;if(key==='trad')tradWD+=pull;shortfall-=pull;}}}
+    roth=Math.max(0,roth-rothWD); trad=Math.max(0,trad-tradWD); taxable=Math.max(0,taxable-taxWD); hsa=Math.max(0,hsa-hsaWD);
+    const countable=(checked('countStipend')?stipend:0)+other+(checked('countSS')?(jSS+kSS):0)+(checked('countTrad')?tradWD:0)+(checked('countRoth')?rothWD:0)+(checked('countTaxable')?taxWD:0)+(checked('countHSA')?hsaWD:0);
+    const overSnap=countable>snapLimit, overMedical=countable>medLimit; if(overSnap)snapOver++; if(overMedical)medOver++; worstShortfall=Math.max(worstShortfall,shortfall);
+    const totalBal=roth+trad+taxable+hsa;
+    rows.push({month:m,ageJason:ageJ,ageKellie:ageK,totalCosts:costs,stipend,otherIncome:other,jasonSS:jSS,kellieSS:kSS,rothWD,tradWD,taxableWD:taxWD,hsaWD,countableIncome:countable,overSnap,overMedical,shortfall,totalBal});
+    pts.labels.push(m); pts.totalBal.push(totalBal); pts.countable.push(countable); pts.snap.push(snapLimit); pts.medical.push(medLimit);
+  }
+  renderSummary(rows,snapOver,medOver,worstShortfall); renderTable(rows); renderAnnual(rows); drawChart(pts);
+}
+
+function renderSummary(rows,snapOver,medicalOver,worstShortfall){const end=rows[rows.length-1];const ok=end.totalBal>0&&worstShortfall===0;const el=document.getElementById('mStatus');el.textContent=ok?'Viable':(end.totalBal>0?'Tight':'Fails');el.className='value '+(ok?'good':(end.totalBal>0?'warn':'bad'));document.getElementById('mEnding').textContent=money(end.totalBal);document.getElementById('mSnap').textContent=snapOver;document.getElementById('mMedical').textContent=medicalOver;document.getElementById('mShortfall').textContent=money(worstShortfall)}
+
+function renderTable(rows){const tbody=document.querySelector('#resultsTable tbody');tbody.innerHTML='';for(const r of rows){const tr=document.createElement('tr');tr.innerHTML=`<td>Month ${r.month}</td><td>${r.ageJason.toFixed(1)}</td><td>${r.ageKellie.toFixed(1)}</td><td>${money2(r.totalCosts)}</td><td>${money2(r.stipend)}</td><td>${money2(r.otherIncome)}</td><td>${money2(r.jasonSS)}</td><td>${money2(r.kellieSS)}</td><td>${money2(r.rothWD)}</td><td>${money2(r.tradWD)}</td><td>${money2(r.taxableWD)}</td><td>${money2(r.hsaWD)}</td><td>${money2(r.countableIncome)}</td><td class='${r.overSnap?'bad':'good'}'>${r.overSnap?'YES':'No'}</td><td class='${r.overMedical?'bad':'good'}'>${r.overMedical?'YES':'No'}</td><td class='${r.shortfall>0?'bad':''}'>${money2(r.shortfall)}</td><td>${money2(r.totalBal)}</td>`;tbody.appendChild(tr)}}
+
+function renderAnnual(rows){
+  const tbody=document.querySelector('#annualTable tbody'); tbody.innerHTML='';
+  for(let i=0;i<rows.length;i+=12){
+    const chunk=rows.slice(i,i+12); if(!chunk.length) continue;
+    const annualCosts=chunk.reduce((a,b)=>a+b.totalCosts,0);
+    const annualCountable=chunk.reduce((a,b)=>a+b.countableIncome,0);
+    const annualWD=chunk.reduce((a,b)=>a+b.rothWD+b.tradWD+b.taxableWD+b.hsaWD,0);
+    const maxShort=Math.max(...chunk.map(r=>r.shortfall));
+    const end=chunk[chunk.length-1];
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>Year ${Math.floor(i/12)+1}</td><td>${end.ageJason.toFixed(1)}</td><td>${money2(annualCosts)}</td><td>${money2(annualCountable)}</td><td>${money2(annualWD)}</td><td>${money2(end.totalBal)}</td><td class='${maxShort>0?'bad':'good'}'>${money2(maxShort)}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+function drawChart(points){const c=document.getElementById('chart'),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);const p={l:60,r:20,t:15,b:30},cw=w-p.l-p.r,ch=h-p.t-p.b;const vals=[...points.totalBal,...points.countable,...points.snap,...points.medical];const max=Math.max(...vals,1)*1.05;const x=i=>p.l+(i/Math.max(points.labels.length-1,1))*cw,y=v=>p.t+ch-((v)/max)*ch;ctx.strokeStyle='#223047';for(let i=0;i<=5;i++){const yy=p.t+i*(ch/5);ctx.beginPath();ctx.moveTo(p.l,yy);ctx.lineTo(w-p.r,yy);ctx.stroke()}ctx.fillStyle='#94a3b8';ctx.font='11px Arial';for(let i=0;i<=5;i++){ctx.fillText('$'+Math.round(max-(max/5)*i).toLocaleString(),5,p.t+i*(ch/5)+4)}
+  const line=(d,color,width=2)=>{ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();d.forEach((v,i)=>{const xx=x(i),yy=y(v);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)});ctx.stroke()};
+  line(points.totalBal,'#38bdf8',2.5);line(points.countable,'#22c55e',2);line(points.snap,'#f59e0b',2);line(points.medical,'#ef4444',2);
+}
+runPlan();
+</script>
+</body>
+</html>
