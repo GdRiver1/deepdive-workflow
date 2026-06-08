@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Jellie Hub v4 - Kitchen Command Kit</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="team-jellie-hub-v4" class="tjh" data-screen-mode="daily">
+    <header class="tjh-topbar">
+      <div class="tjh-brand">
+        <div class="tjh-kicker">Kitchen Command Kit</div>
+        <h1>Team Jellie Hub v4</h1>
+      </div>
+      <div class="tjh-clock-block" aria-live="polite">
+        <div id="tjh-time" class="tjh-time">--:--</div>
+        <div id="tjh-date" class="tjh-date">Loading date</div>
+      </div>
+      <div class="tjh-status-cluster">
+        <div class="tjh-status-item"><span class="tjh-label">Mode</span><strong id="tjh-current-mode">Daily Color</strong></div>
+        <div class="tjh-status-item tjh-color-status"><span id="tjh-color-chip" class="tjh-color-chip"></span><span><span class="tjh-label">Today</span><strong id="tjh-color-name">Not spun</strong></span></div>
+        <div class="tjh-status-item"><span class="tjh-label">Status</span><strong id="tjh-last-updated">Local dashboard ready</strong></div>
+      </div>
+    </header>
+    <main class="tjh-shell">
+      <nav class="tjh-rail" aria-label="Team Jellie Hub modules">
+        <div id="tjh-nav-groups" class="tjh-nav-groups"></div>
+      </nav>
+      <section class="tjh-panel" aria-live="polite">
+        <div class="tjh-panel-head">
+          <div>
+            <div id="tjh-active-category" class="tjh-kicker">Home</div>
+            <h2 id="tjh-active-title">Home Index</h2>
+          </div>
+          <p id="tjh-active-description">Kitchen command overview.</p>
+        </div>
+        <div id="tjh-module-root" class="tjh-module-root"></div>
+      </section>
+    </main>
+    <footer class="tjh-bottombar">
+      <span id="tjh-save-status">Saved locally</span>
+      <span id="tjh-active-module">Home Index</span>
+      <span id="tjh-outdoor-status">Outdoor match running</span>
+      <span>Blogger-safe v1: localStorage only</span>
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
