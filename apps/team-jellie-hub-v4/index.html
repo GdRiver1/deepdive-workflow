@@ -3,48 +3,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Team Jellie Hub v4 - Kitchen Command Kit</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Team Jellie Hub v4</title>
+  <style>
+    :root{color-scheme:light;--ink:#172026;--muted:#56666b;--paper:#fbfaf5;--line:#d8dfdc;--blue:#b8d7d4;--gold:#f2d28b;--coral:#d77c6f;--green:#9caf88;--dark:#16242a}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#edf2ef;color:var(--ink);line-height:1.45}.hub{min-height:100vh;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:14px}.top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:stretch}.brand,.clock,.panel,.rail,.foot{background:var(--paper);border:1px solid var(--line);border-radius:8px}.brand{padding:18px}.kicker{margin:0 0 4px;color:#6b6556;font-size:.78rem;font-weight:700;text-transform:uppercase}.brand h1{margin:0;font-size:clamp(2rem,5vw,4rem);line-height:1;letter-spacing:0}.brand p{margin:8px 0 0;color:var(--muted)}.clock{min-width:220px;padding:18px;text-align:right}.time{font-size:clamp(2rem,5vw,3.8rem);font-weight:800;line-height:1}.date{color:var(--muted);font-weight:700}.shell{display:grid;grid-template-columns:250px 1fr;gap:12px;min-height:0}.rail{padding:10px;display:grid;gap:8px;align-content:start}.nav{width:100%;border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px;text-align:left;cursor:pointer}.nav[aria-current=true]{background:var(--dark);color:white;border-color:var(--dark)}.nav b{display:block;font-size:.98rem}.nav span{display:block;font-size:.8rem;color:inherit;opacity:.75;margin-top:2px}.panel{padding:16px;overflow:auto}.panel-head{display:flex;justify-content:space-between;gap:12px;align-items:start;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}.panel h2{margin:0;font-size:clamp(1.6rem,3vw,2.5rem);letter-spacing:0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{background:white;border:1px solid var(--line);border-radius:8px;padding:14px}.card h3{margin:0 0 8px}.button{display:inline-flex;min-height:42px;align-items:center;justify-content:center;padding:10px 12px;border-radius:8px;background:var(--dark);color:white!important;text-decoration:none;font-weight:700;border:0;cursor:pointer}.button.secondary{background:#fff;color:var(--ink)!important;border:1px solid var(--line)}.hero{background:linear-gradient(135deg,var(--blue),var(--gold) 55%,var(--coral));padding:18px;border-radius:8px}.big{font-size:clamp(2.4rem,7vw,5.5rem);font-weight:900;line-height:.95}.swatches{display:flex;gap:8px;flex-wrap:wrap}.swatch{width:52px;height:52px;border-radius:8px;border:1px solid rgba(0,0,0,.16)}textarea,input{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit}.tasks{display:grid;gap:8px}.task{display:flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px}.foot{padding:10px 14px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}@media(max-width:800px){.top,.shell{grid-template-columns:1fr}.clock{text-align:left}.grid{grid-template-columns:1fr}.hub{padding:8px}.rail{grid-template-columns:repeat(2,minmax(0,1fr))}.panel-head{display:block}}
+  </style>
 </head>
 <body>
-  <div id="team-jellie-hub-v4" class="tjh" data-screen-mode="daily">
-    <header class="tjh-topbar">
-      <div class="tjh-brand">
-        <div class="tjh-kicker">Kitchen Command Kit</div>
-        <h1>Team Jellie Hub v4</h1>
-      </div>
-      <div class="tjh-clock-block" aria-live="polite">
-        <div id="tjh-time" class="tjh-time">--:--</div>
-        <div id="tjh-date" class="tjh-date">Loading date</div>
-      </div>
-      <div class="tjh-status-cluster">
-        <div class="tjh-status-item"><span class="tjh-label">Mode</span><strong id="tjh-current-mode">Daily Color</strong></div>
-        <div class="tjh-status-item tjh-color-status"><span id="tjh-color-chip" class="tjh-color-chip"></span><span><span class="tjh-label">Today</span><strong id="tjh-color-name">Not spun</strong></span></div>
-        <div class="tjh-status-item"><span class="tjh-label">Status</span><strong id="tjh-last-updated">Local dashboard ready</strong></div>
-      </div>
-    </header>
-    <main class="tjh-shell">
-      <nav class="tjh-rail" aria-label="Team Jellie Hub modules">
-        <div id="tjh-nav-groups" class="tjh-nav-groups"></div>
-      </nav>
-      <section class="tjh-panel" aria-live="polite">
-        <div class="tjh-panel-head">
-          <div>
-            <div id="tjh-active-category" class="tjh-kicker">Home</div>
-            <h2 id="tjh-active-title">Home Index</h2>
-          </div>
-          <p id="tjh-active-description">Kitchen command overview.</p>
-        </div>
-        <div id="tjh-module-root" class="tjh-module-root"></div>
-      </section>
-    </main>
-    <footer class="tjh-bottombar">
-      <span id="tjh-save-status">Saved locally</span>
-      <span id="tjh-active-module">Home Index</span>
-      <span id="tjh-outdoor-status">Outdoor match running</span>
-      <span>Blogger-safe v1: localStorage only</span>
-    </footer>
-  </div>
-  <script src="app.js"></script>
+<div class="hub">
+  <header class="top">
+    <section class="brand"><p class="kicker">Deep Dive AI / AI Workflow Solutions</p><h1>Team Jellie Hub v4</h1><p>Kitchen command dashboard for color, weather notes, meals, tasks, links, and home reference.</p></section>
+    <section class="clock"><div id="time" class="time">--:--</div><div id="date" class="date">Loading date</div></section>
+  </header>
+  <main class="shell">
+    <nav class="rail" id="nav" aria-label="Hub modules"></nav>
+    <section class="panel"><div class="panel-head"><div><p id="cat" class="kicker">Home</p><h2 id="title">Home Index</h2></div><a class="button secondary" href="https://deepdiveaipodcast.blogspot.com/2026/06/team-jellie-hub-v4.html">Blogger Post</a></div><div id="view"></div></section>
+  </main>
+  <footer class="foot"><span>Team Jellie Hub v4</span><span>Local-first public launcher</span><span id="saved">Ready</span></footer>
+</div>
+<script>
+(function(){
+  const storeKey='teamJellieHubV4Public';
+  const state=JSON.parse(localStorage.getItem(storeKey)||'{}');
+  const colors=['#B8D7D4','#F2D28B','#D77C6F','#9CAF88','#A7B6C9','#D9B8C4','#8FB7A3','#C9B7A2'];
+  const modules=[
+    ['home','Home','Overview','Kitchen command overview',home],['color','Daily Color','Govee','Spin a dashboard color',color],['weather','Weather Notes','Reference','Manual kitchen weather notes',weather],['meals','Meals','Kitchen','Meal ideas and prep notes',meals],['tasks','Shared Tasks','Home','Quick task checklist',tasks],['notes','Quick Notes','Memory','Browser-local notes',notes],['links','Home Links','Reference','Deep Dive and local references',links]
+  ];
+  function save(){localStorage.setItem(storeKey,JSON.stringify(state));document.getElementById('saved').textContent='Saved locally'}
+  function esc(s){return String(s||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]))}
+  function tick(){const d=new Date();document.getElementById('time').textContent=d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});document.getElementById('date').textContent=d.toLocaleDateString([], {weekday:'long', month:'long', day:'numeric'})}
+  setInterval(tick,1000);tick();
+  function renderNav(active){document.getElementById('nav').innerHTML=modules.map(m=>`<button class="nav" data-id="${m[0]}" aria-current="${m[0]===active}"><b>${m[1]}</b><span>${m[2]}</span></button>`).join('');document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>open(b.dataset.id))}
+  function open(id){const m=modules.find(x=>x[0]===id)||modules[0];state.active=id;save();renderNav(id);document.getElementById('cat').textContent=m[2];document.getElementById('title').textContent=m[1];document.getElementById('view').innerHTML=m[4]();bind(id)}
+  function home(){return `<div class="hero"><p class="kicker">Today</p><div class="big">${esc(state.colorName||'Ready')}</div><p>Use the rail to open color, weather, meals, tasks, notes, and links.</p></div><div class="grid"><div class="card"><h3>Hub status</h3><p>Running from GitHub Pages as a Blogger-safe launcher.</p></div><div class="card"><h3>Storage</h3><p>Settings on this page save only in this browser.</p></div><div class="card"><h3>Boundary</h3><p>No credentials, uploads, publishing automation, or smart-home control.</p></div></div>`}
+  function color(){return `<div class="card"><h3>Daily Color Wheel</h3><div class="swatches">${colors.map(c=>`<button class="swatch" data-color="${c}" style="background:${c}" title="${c}"></button>`).join('')}</div><p><b>Selected:</b> <span id="picked">${esc(state.colorName||'None')}</span></p><button class="button" id="spin">Spin color</button></div>`}
+  function weather(){return `<div class="grid"><div class="card"><h3>Manual Condition</h3><input id="weatherText" value="${esc(state.weather||'Charlotte, MI - check local forecast')}"></div><div class="card"><h3>Lighting Note</h3><p>Use weather and daylight as a manual Govee color reference.</p></div><div class="card"><h3>Radar</h3><a class="button" href="https://radar.weather.gov/" target="_blank" rel="noopener">Open NWS Radar</a></div></div>`}
+  function meals(){return `<div class="card"><h3>Meal Ideas</h3><textarea id="mealText" rows="8">${esc(state.meals||'Breakfast:\nLunch:\nDinner:')}</textarea></div>`}
+  function tasks(){const list=state.tasks||['Check kitchen plan','Pick daily color','Review dinner idea'];return `<div class="tasks">${list.map((t,i)=>`<label class="task"><input type="checkbox"> <span>${esc(t)}</span></label>`).join('')}</div><div class="card"><h3>Add task</h3><input id="taskText" placeholder="New task"><p><button class="button" id="addTask">Add task</button></p></div>`}
+  function notes(){return `<div class="card"><h3>Quick Notes</h3><textarea id="noteText" rows="10">${esc(state.notes||'')}</textarea></div>`}
+  function links(){return `<div class="grid"><div class="card"><h3>Deep Dive AI</h3><p><a class="button" href="https://deepdiveaipodcast.blogspot.com/" target="_blank">Blog</a></p><p><a class="button" href="https://www.youtube.com/@DeepDive-n1l" target="_blank">YouTube</a></p></div><div class="card"><h3>AI Workflow Solutions</h3><p><a class="button" href="https://facebook.com/AIWorkflowSolutionsLLC" target="_blank">Facebook</a></p></div><div class="card"><h3>Source</h3><p><a class="button" href="https://github.com/GdRiver1/deepdive-workflow/tree/main/apps/team-jellie-hub-v4" target="_blank">GitHub</a></p></div></div>`}
+  function bind(id){if(id==='color'){document.querySelectorAll('.swatch').forEach(b=>b.onclick=()=>{state.colorName=b.dataset.color;save();document.getElementById('picked').textContent=b.dataset.color});document.getElementById('spin').onclick=()=>{const c=colors[Math.floor(Math.random()*colors.length)];state.colorName=c;save();document.getElementById('picked').textContent=c}} if(id==='weather')document.getElementById('weatherText').oninput=e=>{state.weather=e.target.value;save()}; if(id==='meals')document.getElementById('mealText').oninput=e=>{state.meals=e.target.value;save()}; if(id==='notes')document.getElementById('noteText').oninput=e=>{state.notes=e.target.value;save()}; if(id==='tasks')document.getElementById('addTask').onclick=()=>{const v=document.getElementById('taskText').value.trim();if(v){state.tasks=[...(state.tasks||[]),v];save();open('tasks')}}}
+  open(state.active||'home');
+})();
+</script>
 </body>
 </html>
